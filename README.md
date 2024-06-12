@@ -91,9 +91,9 @@ func main() {
 }
 
 ```
-
 visit/visit.go
-````
+
+```
 package visit
 
 import (
@@ -236,6 +236,7 @@ func (v *Apply) SetApplyReason(reason string) {
 func (v *Apply) SetApplyCompany(company string) {
 	v.Body.ApplyCompany = company
 }
+
 
 ```
 
