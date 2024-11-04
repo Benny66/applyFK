@@ -3,10 +3,15 @@ package main
 import (
 	"applyFK/config"
 	"applyFK/visit"
+	"log"
 )
 
 func main() {
-	config.LoadConfig("config.yaml")
+	err := config.LoadConfig("config.yaml")
+	if err != nil {
+		log.Fatalf("load config failed, err: %v", err)
+		return
+	}
 	// 获取访问的token和ticket
 	v := visit.NewApply()
 	v.SetUrl(config.Conf.Url)
