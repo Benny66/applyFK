@@ -1,6 +1,16 @@
 package holiday
 
-import "time"
+import (
+	"log"
+	"time"
+)
+
+var HolidayMap = map[string][]string{
+	"2024": Holidays2024,
+}
+var WorkWeekMap = map[string][]string{
+	"2024": NeedWorkWeek2024,
+}
 
 // IsWeekend 判断给定日期是否是周末
 func IsWeekend(t time.Time) bool {
@@ -10,15 +20,22 @@ func IsWeekend(t time.Time) bool {
 }
 
 func IsHoliday(date string) bool {
-	for _, holiday := range Holidays2024 {
+	currentYear := time.Now().Format("2006") // 获取当前年份
+	holidays := HolidayMap[currentYear]
+	if holidays == nil {
+		log.Fatal("holiday map is nil")
+		return false
+	}
+	for _, holiday := range holidays {
 		if holiday == date {
 			return true
 		}
 	}
 	t, _ := time.Parse(DayLayout, date)
 	if IsWeekend(t) {
-		for _, holiday := range NeedWorkWeek2024 {
-			if holiday == date {
+		workWeeks := WorkWeekMap[currentYear]
+		for _, workWeek := range workWeeks {
+			if workWeek == date {
 				return false
 			}
 		}
