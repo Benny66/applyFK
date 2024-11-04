@@ -7,7 +7,7 @@ import (
 
 func (v *Apply) ApplyOneWeek() error {
 	fmt.Println("开始申请一周")
-	hadApplyDays, err := v.GetHadApplyDays() // 获取已申请天数
+	hadApplyDays, err := v.GetHadApplyDays(2) // 获取已申请天数
 	if err != nil {
 		fmt.Printf("获取已申请天数失败%s", err)
 		return err

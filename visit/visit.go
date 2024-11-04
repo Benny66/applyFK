@@ -9,6 +9,7 @@ import (
 )
 
 type Apply struct {
+	Url    string      `json:"url"`
 	Token  string      `json:"token"`
 	Ticket string      `json:"ticket"`
 	Body   ApplyRecord `json:"body"`
@@ -31,16 +32,17 @@ type ApplyRecord struct {
 
 func NewApply() *Apply {
 	return &Apply{
+		Url: "",
 		Body: ApplyRecord{
-			City:         "xxx",
+			City:         "深圳",
 			CityID:       28,
-			Build:        "xxx",
+			Build:        "科兴科学园D3",
 			BuildID:      53,
 			ApplyTime:    "09:00",
 			ApplyNum:     1,
-			ApplyReason:  "xxx",
-			ApplyCompany: "xxx",
-			AppliedPhone: "xxx", // 假设被访问者的手机号为 xxx xxx
+			ApplyReason:  "工作需要",
+			ApplyCompany: "腾讯音乐",
+			AppliedPhone: "", // 假设被访问者的手机号
 		},
 	}
 }
@@ -51,8 +53,7 @@ func (v *Apply) Apply() error {
 	payload := bytes.NewBuffer(jsonValue)
 
 	// 替换以下URL为您要发送POST请求的服务器地址
-	url := "https://gw.xxxxx.com/visitor/apply/save"
-
+	url := fmt.Sprintf("%s/visitor/apply/save", v.Url)
 	// 创建请求
 	req, err := http.NewRequest("POST", url, payload)
 	if err != nil {
@@ -138,4 +139,72 @@ func (v *Apply) SetApplyReason(reason string) {
 
 func (v *Apply) SetApplyCompany(company string) {
 	v.Body.ApplyCompany = company
+}
+
+func (v *Apply) SetUrl(url string) {
+	v.Url = url
+}
+
+func (v *Apply) GetUrl() string {
+	return v.Url
+}
+
+func (v *Apply) GetToken() string {
+	return v.Token
+}
+
+func (v *Apply) GetTicket() string {
+	return v.Ticket
+}
+
+func (v *Apply) GetAppliedUserID() string {
+	return v.Body.AppliedUserID
+}
+
+func (v *Apply) GetAppliedName() string {
+	return v.Body.AppliedName
+}
+
+func (v *Apply) GetCity() string {
+	return v.Body.City
+}
+
+func (v *Apply) GetCityID() int {
+	return v.Body.CityID
+}
+
+func (v *Apply) GetBuild() string {
+	return v.Body.Build
+}
+
+func (v *Apply) GetBuildID() int {
+	return v.Body.BuildID
+}
+
+func (v *Apply) GetApplyDate() string {
+	return v.Body.ApplyDate
+}
+
+func (v *Apply) GetApplyTime() string {
+	return v.Body.ApplyTime
+}
+
+func (v *Apply) GetApplyNum() int {
+	return v.Body.ApplyNum
+}
+
+func (v *Apply) GetVerifiedNum() string {
+	return v.Body.VerifiedNum
+}
+
+func (v *Apply) GetAppliedPhone() string {
+	return v.Body.AppliedPhone
+}
+
+func (v *Apply) GetApplyReason() string {
+	return v.Body.ApplyReason
+}
+
+func (v *Apply) GetApplyCompany() string {
+	return v.Body.ApplyCompany
 }

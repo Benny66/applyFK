@@ -38,8 +38,6 @@ type Visit struct {
 	VisitCompany   string      `json:"visit_company"`
 }
 
-var joinListUrl = "https://gw.xxxxx.com/visitor/apply/joinList"
-
 // GetApplyJoinList 获取申请记录列表
 func (v *Apply) GetApplyJoinList(page int) (*Response, error) {
 	// 创建HTTP客户端
@@ -47,7 +45,7 @@ func (v *Apply) GetApplyJoinList(page int) (*Response, error) {
 	if page <= 0 {
 		page = 1
 	}
-	url := fmt.Sprintf("%s?page=%d", joinListUrl, page)
+	url := fmt.Sprintf("%s/visitor/apply/joinList?page=%d", v.Url, page)
 	// 发起GET请求
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -86,10 +84,12 @@ func (v *Apply) GetApplyJoinList(page int) (*Response, error) {
 }
 
 // GetHadApplyDays 获取已经申请过的天数
-func (v *Apply) GetHadApplyDays() (map[string]int, error) {
+func (v *Apply) GetHadApplyDays(page int) (map[string]int, error) {
 	var retDays = make(map[string]int, 0)
 	now := holiday.CurrentDayTime()
-	page := 2
+	if page == 0 {
+		page = 2
+	}
 	for i := 1; i <= page; i++ {
 		response, err := v.GetApplyJoinList(i)
 		if err != nil {
