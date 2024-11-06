@@ -4,3 +4,8 @@ token: "your_token"
 ticket: "your_ticket"
 applyPhone: "xxxx"
 
+# 快捷申请，快捷申请存在时，取快捷申请
+quickApplyType: month # week, month, year
+quickApplyNum: 1 # 0=当前周期，1=下一周期，2=下下周期，依次类推;默认为0
+# 申请指定天数，自动跳过节假日和周末
+# applyDays: 30

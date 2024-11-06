@@ -75,8 +75,6 @@ func (v *Apply) Apply() error {
 	}
 	defer resp.Body.Close()
 
-	// 打印响应状态码
-	fmt.Printf("申请成功\n")
 	// 打印响应体
 	body, _ := io.ReadAll(resp.Body)
 	fmt.Println("Response Body:", string(body))

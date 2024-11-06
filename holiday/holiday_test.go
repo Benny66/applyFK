@@ -1,6 +1,7 @@
 package holiday
 
 import (
+	"fmt"
 	"testing"
 	"time"
 )
@@ -77,5 +78,86 @@ func TestCurrentDayStr(t *testing.T) {
 		if result != test.expected {
 			t.Errorf("CurrentDayStr(%d) = %s; expected %s", test.day, result, test.expected)
 		}
+	}
+}
+
+func TestGetCustomWeekDays(t *testing.T) {
+	tests := []struct {
+		week     int
+		expected int
+	}{
+		// Happy path
+		{0, 3},  // Assuming there are 5 working days until the next Sunday
+		{1, 8},  // Assuming there are 7 more working days until the Sunday of the next week
+		{2, 13}, // Assuming there are 7 more working days until the Sunday of the third week
+
+		// Edge cases
+		{-1, 0}, // Negative week, should return 0
+	}
+
+	for _, test := range tests {
+		t.Run(fmt.Sprintf("week=%d", test.week), func(t *testing.T) {
+			result := GetCustomWeekDays(test.week)
+			if result != test.expected {
+				t.Errorf("expected %d, got %d", test.expected, result)
+			}
+		})
+	}
+}
+func TestCalculateWorkDays(t *testing.T) {
+	tests := []struct {
+		month    int
+		expected int
+	}{
+		{0, 18}, // assuming the current month has 20 workdays
+		{1, 40}, // assuming next month has 18 workdays
+		{-1, 0}, // invalid month, should return 0
+	}
+
+	for _, test := range tests {
+		t.Run("Calculating WorkDays", func(t *testing.T) {
+			result := CalculateWorkDays(test.month)
+			if result != test.expected {
+				t.Errorf("expected %d, got %d", test.expected, result)
+			}
+		})
+	}
+}
+
+func TestCalculateWorkDaysToEndOfYear(t *testing.T) {
+	tests := []struct {
+		name     string
+		current  time.Time
+		expected int
+	}{
+		{
+			name:     "Happy path - regular date",
+			current:  time.Date(2024, 1, 1, 0, 0, 0, 0, time.UTC),
+			expected: 249, // Assuming 260 working days from Jan 1 to Dec 31, excluding holidays and weekends
+		},
+		{
+			name:     "Edge case - last day of year",
+			current:  time.Date(2024, 11, 06, 0, 0, 0, 0, time.UTC),
+			expected: 40, // No working days left in the year
+		},
+		{
+			name:     "Edge case - holiday on current date",
+			current:  time.Date(2024, 12, 25, 0, 0, 0, 0, time.UTC), // Assuming Dec 25 is a holiday
+			expected: 5,                                             // Only Dec 26 is counted as a working day
+		},
+		{
+			name:     "Edge case - weekdays only",
+			current:  time.Date(2024, 12, 31, 0, 0, 0, 0, time.UTC), // Assume weekends don't interfere
+			expected: 1,                                             // You can calculate this based on actual holidays and weekends
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			result := CalculateWorkDaysToEndOfYear(test.current)
+			if result != test.expected {
+				t.Errorf("expected %d, got %d", test.expected, result)
+			}
+		})
 	}
 }

@@ -25,7 +25,7 @@ func (v *Apply) ApplyDate(date string, num int) error {
 	return nil
 }
 
-func (v *Apply) ApplyDays(applyDayNum int, endDate string) error {
+func (v *Apply) ApplyDays(applyDayNum int) error {
 	fmt.Printf("开始申请%d天\n", applyDayNum)
 	// 获取已申请日期列表
 	hadApplyDays, err := v.GetHadApplyDays(20)
@@ -37,16 +37,16 @@ func (v *Apply) ApplyDays(applyDayNum int, endDate string) error {
 	hadDayNum := 0
 	for {
 		currentDate := holiday.CurrentDayStr(day)
-		if endDate == currentDate {
-			fmt.Printf("时间%s 已到达结束日期，退出\n", currentDate)
-			break
-		}
 		day += 1
 		applyNum := 3 // 每天申请3次
 		if _, ok := hadApplyDays[currentDate]; ok {
 			days := hadApplyDays[currentDate]
 			if days >= 3 {
 				fmt.Printf("时间%s 已申请3天，跳过\n", currentDate)
+				hadDayNum += 1
+				if hadDayNum >= applyDayNum {
+					break
+				}
 				continue
 			}
 			applyNum = 3 - days
